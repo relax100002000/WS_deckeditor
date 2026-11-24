@@ -5,6 +5,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta name="referrer" content="no-referrer" />
+		<!-- ==== PWA (可安裝成 App) ==== -->
+		<link rel="manifest" href="manifest.webmanifest" />
+		<meta name="theme-color" content="#202430" />
+		<link rel="icon" type="image/png" href="img/app/icon-192.png" />
+		<link rel="apple-touch-icon" href="img/app/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="WS Deck" />
+		<script>
+			if('serviceWorker' in navigator && location.protocol.indexOf('http') == 0)
+				window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function(e) { console.warn('SW', e); }); });
+		</script>
 	<title>Weiß Schwarz 卡片效果簡述</title>
 	<script>
 		(function(){
@@ -49,6 +61,9 @@
 		.feat { font-size: 12px; color: var(--sub); }
 		#zoom { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 20; cursor: zoom-out; }
 		#zoom img { max-width: 92vw; max-height: 92vh; border-radius: 10px; }
+		#hover { position: fixed; z-index: 15; pointer-events: none; display: none; }
+		#hover img { width: 300px; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.45); display: block; }
+		#hover.cx img { width: 420px; }
 		#msg { padding: 30px; text-align: center; color: var(--sub); }
 		.legend { font-size: 12px; color: var(--sub); margin-top: 6px; }
 		@media (max-width: 600px) { .row .pic { flex-basis: 70px; } .row .pic img { width: 70px; } .row.cx .pic, .row.cx .pic img { flex-basis: 98px; width: 98px; } }
@@ -75,6 +90,7 @@
 </header>
 <main id="list"><div id="msg">載入中…</div></main>
 <div id="zoom"><img alt=""></div>
+<div id="hover"><img alt=""></div>
 
 <script>
 // 有簡述的タイトル檔 (data/sum_<file>.js)；其他タイトル陸續分批加入
@@ -211,9 +227,29 @@ window.addEventListener("DOMContentLoaded", function() {
 	document.getElementById("chkOrig").onchange = function() { document.body.classList.toggle("show-orig", this.checked); };
 	document.getElementById("list").addEventListener("click", function(e) {
 		if(e.target.tagName == "IMG" && e.target.closest(".pic")) {
-			var z = document.getElementById("zoom"); z.querySelector("img").src = e.target.src; z.style.display = "flex";
+			hv.style.display = "none"; var z = document.getElementById("zoom"); z.querySelector("img").src = e.target.src; z.style.display = "flex";
 		}
 	});
+	// 滑鼠移到卡圖上 → 旁邊浮出放大圖 (跟著游標，避開視窗邊緣)
+	var hv = document.getElementById("hover"), hvImg = hv.querySelector("img");
+	function placeHover(e) {
+		var w = hv.offsetWidth, h = hv.offsetHeight, gap = 18;
+		var x = e.clientX + gap, y = e.clientY - h / 2;
+		if(x + w > window.innerWidth - 8) x = e.clientX - gap - w;
+		y = Math.max(8, Math.min(y, window.innerHeight - h - 8));
+		hv.style.left = x + "px"; hv.style.top = y + "px";
+	}
+	var list = document.getElementById("list");
+	list.addEventListener("mouseover", function(e) {
+		var t = e.target;
+		if(t.tagName != "IMG" || !t.closest(".pic")) return;
+		hv.classList.toggle("cx", !!t.closest(".row.cx"));
+		hvImg.onload = function() { placeHover(e); };
+		hvImg.src = t.src; hv.style.display = "block"; placeHover(e);
+	});
+	list.addEventListener("mousemove", function(e) { if(hv.style.display == "block") placeHover(e); });
+	list.addEventListener("mouseout", function(e) { if(e.target.tagName == "IMG") hv.style.display = "none"; });
+	window.addEventListener("scroll", function() { hv.style.display = "none"; }, true);
 	document.getElementById("zoom").onclick = function() { this.style.display = "none"; };
 	document.addEventListener("keydown", function(e) { if(e.key == "Escape") document.getElementById("zoom").style.display = "none"; });
 	changeSeries();

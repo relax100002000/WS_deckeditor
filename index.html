@@ -18,6 +18,18 @@
 		</script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<!-- ==== PWA (可安裝成 App) ==== -->
+		<link rel="manifest" href="manifest.webmanifest" />
+		<meta name="theme-color" content="#202430" />
+		<link rel="icon" type="image/png" href="img/app/icon-192.png" />
+		<link rel="apple-touch-icon" href="img/app/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="WS Deck" />
+		<script>
+			if('serviceWorker' in navigator && location.protocol.indexOf('http') == 0)
+				window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function(e) { console.warn('SW', e); }); });
+		</script>
 		<title>Weiß Schwarz Deck Builder</title>
 	</head>
 	<style>
@@ -230,6 +242,7 @@
 			</select>
 			<button id="darkModeToggle" type="button" onclick="toggleDarkMode()" title="切換黑暗模式">🌙 Dark</button>
 			<a href="summary.html" target="_blank" style="margin-left:6px;" data-tw="效果簡述">効果まとめ</a>
+			<button id="installApp" type="button" style="display:none; height:auto; padding:2px 8px; margin-left:6px;" data-tw="📲 安裝 App">📲 アプリをインストール</button>
 			<span class="alt-lock-tip" title="Hold ALT to lock the card preview window. Click the preview to list the parallel arts of that card; ALT+click a card in the deck to change its art.">🔒 Hold <b>ALT</b> = lock card preview</span>
 			※Right-click in the deck can add existing card.
 			<br>Deck List
@@ -407,5 +420,18 @@
 				<div class="window-content" id="deckView"></div>
 			</div>
 		</div>
+		<script>
+			// PWA 安裝按鈕：瀏覽器判定可安裝時才出現 (Chrome / Edge)；iOS Safari 請用「分享 → 加入主畫面」
+			(function(){
+				var deferred = null, btn = document.getElementById('installApp');
+				window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); deferred = e; btn.style.display = ''; });
+				btn.addEventListener('click', function() {
+					if(!deferred) return;
+					deferred.prompt();
+					deferred.userChoice.then(function() { deferred = null; btn.style.display = 'none'; });
+				});
+				window.addEventListener('appinstalled', function() { btn.style.display = 'none'; });
+			})();
+		</script>
 	</body>
 </html>

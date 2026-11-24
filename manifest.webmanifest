@@ -1,0 +1,20 @@
+{
+	"name": "Weiß Schwarz Deck Builder",
+	"short_name": "WS Deck",
+	"description": "ヴァイスシュヴァルツ 組牌器＋卡片效果簡述",
+	"id": "./",
+	"start_url": "./index.html",
+	"scope": "./",
+	"display": "standalone",
+	"background_color": "#202430",
+	"theme_color": "#202430",
+	"lang": "ja",
+	"icons": [
+		{ "src": "img/app/icon-192.png", "sizes": "192x192", "type": "image/png" },
+		{ "src": "img/app/icon-512.png", "sizes": "512x512", "type": "image/png" },
+		{ "src": "img/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+	],
+	"shortcuts": [
+		{ "name": "效果簡述", "short_name": "効果まとめ", "url": "./summary.html", "icons": [{ "src": "img/app/icon-192.png", "sizes": "192x192" }] }
+	]
+}

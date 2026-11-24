@@ -18,6 +18,13 @@ Author: ZZZ
 - Language：日本語／繁體中文切換 (介面、篩選選單、卡片資料與效果)
 - 効果まとめ／效果簡述：左上角連結開啟 `summary.html`
 
+## 安裝成 App (PWA)
+- 用 Chrome／Edge 開啟 GitHub Pages 網址 → 左上角「📲 安裝 App」按鈕，或網址列右側的安裝圖示
+- Android Chrome：選單 →「安裝應用程式／加到主畫面」；iPhone／iPad Safari：分享 →「加入主畫面」
+- 安裝後以獨立視窗開啟；長按／右鍵 App 圖示有「效果簡述」捷徑
+- 離線使用：看過的タイトル資料與卡圖會快取 (`sw.js`)，沒網路時也能組牌；網站檔案每次有網路時都抓最新版
+- 需要 https (GitHub Pages) 或 localhost；直接開本機 `index.html` (file://) 不會啟用
+
 ## 效果簡述 (`summary.html`)
 人工整理的繁體中文效果重點，每張卡一段。
 
@@ -51,6 +58,10 @@ Author: ZZZ
   3. `node tools/build_card_info.js ws_cards.json ws_zh.json` → 重新產生 `js/card_info.js` 與 `data/t_*.js`
 
 ## Release note
+20261124 v1.01
+1. 可安裝成 App (PWA)：manifest、App 圖示、組牌器左上角「📲 安裝 App」按鈕、App 圖示捷徑「效果簡述」
+2. 離線使用：Service Worker (`sw.js`) 快取網站檔案、看過的タイトル資料與卡圖 (卡圖上限 4000 張)；有網路時網站檔案一律抓最新版
+
 20261124 v1.00
 1. First release：12 個タイトル (GA文庫、角川スニーカー文庫、BanG Dream!、ガールズ＆パンツァー、ステラソラ、anemoi、勝利の女神：NIKKE、葬送のフリーレン、【推しの子】、Re:ゼロ、シンデレラガールズ、ブラウンダスト2)，依タイトル分檔、選到時才載入
 2. タイトル＋作品兩層篩選 (選單附 GA01／Sak 等代號)，以及種類・レベル・色・コスト・特徴・トリガー・商品・關鍵字篩選
