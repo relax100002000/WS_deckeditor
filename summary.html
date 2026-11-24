@@ -94,14 +94,16 @@
 
 <script>
 // 有簡述的タイトル檔 (data/sum_<file>.js)；其他タイトル陸續分批加入
-var SUMMARY_READY = ["t_GA01"];
+var SUMMARY_READY = ["t_GA01", "t_Sak", "t_GUP", "t_STS", "t_ANM", "t_BRD"];
 
 var cardData = [];
 var SUMMARY = {};		// 卡號 → 簡述
+var SUMMARY_NOTE = {};	// タイトル檔 → 縮寫說明
 var loaded = {};
 
 function wsAddData(file, rows) { rows.forEach(function(r) { cardData.push(r); }); }
-function wsAddSummary(file, prefix, obj) {
+function wsAddSummary(file, prefix, obj, note) {
+	if(note) SUMMARY_NOTE[file] = note;
 	for(var k in obj) SUMMARY[k.indexOf("/") >= 0 ? k : prefix + k] = obj[k];
 }
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -180,7 +182,8 @@ function render() {
 		html += "<h2 class='work'><span class='code'>[" + esc(code) + "]</span>" + esc(TITLE_NAMES[code] || code) + "<span class='n'>" + list.length + " 張</span></h2>";
 		list.forEach(function(c) { html += rowHtml(c); });
 	});
-	document.getElementById("list").innerHTML = html || "<div id='msg'>沒有符合條件的卡片</div>";
+	var note = SUMMARY_NOTE[s[2]] ? "<div class='legend' style='margin-top:10px'>縮寫：" + esc(SUMMARY_NOTE[s[2]]) + "</div>" : "";
+	document.getElementById("list").innerHTML = html ? note + html : "<div id='msg'>沒有符合條件的卡片</div>";
 	document.getElementById("count").textContent = n + " 張";
 }
 
