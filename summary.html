@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta name="referrer" content="no-referrer" />
+	<title>Weiß Schwarz 卡片效果簡述</title>
+	<script>
+		(function(){
+			var v = '?v=' + Date.now();
+			document.write('<script src="js/card_info.js' + v + '"><\/script>');
+			document.write('<script src="js/ws_common.js' + v + '"><\/script>');
+		})();
+	</script>
+	<style>
+		:root { --bg:#f6f6f8; --fg:#222; --card:#fff; --line:#ddd; --sub:#666; --accent:#3f6fd8; --sum:#fffbe8; }
+		body.dark-mode { --bg:#16181c; --fg:#e6e6e6; --card:#22252b; --line:#3a3d44; --sub:#9aa0a6; --accent:#7ea2ff; --sum:#2b2a22; }
+		* { box-sizing: border-box; font-family: sans-serif; }
+		body { margin: 0; background: var(--bg); color: var(--fg); font-size: 15px; }
+		header { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); padding: 10px 14px; }
+		h1 { font-size: 20px; margin: 0 0 8px; }
+		h1 small { font-size: 13px; color: var(--sub); font-weight: normal; margin-left: 8px; }
+		.ctl { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+		.ctl label { font-size: 14px; color: var(--sub); }
+		select, input[type=text] { font-size: 14px; padding: 4px 6px; background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; }
+		input[type=text] { width: 200px; }
+		button { font-size: 14px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--fg); cursor: pointer; }
+		#count { color: var(--sub); font-size: 13px; }
+		main { padding: 10px 14px 40px; max-width: 1200px; margin: 0 auto; }
+		h2.work { font-size: 17px; margin: 22px 0 8px; padding: 6px 10px; border-left: 5px solid var(--accent); background: var(--card); border-radius: 4px; }
+		h2.work .code { color: var(--accent); margin-right: 8px; font-weight: bold; }
+		h2.work .n { color: var(--sub); font-size: 13px; font-weight: normal; margin-left: 6px; }
+		.row { display: flex; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 8px; margin-bottom: 8px; }
+		.row .pic { flex: 0 0 96px; text-align: center; }
+		.row .pic img { width: 96px; border-radius: 5px; cursor: zoom-in; border: 1px solid var(--line); }
+		.row.cx .pic { flex-basis: 134px; }
+		.row.cx .pic img { width: 134px; }
+		.row .body { flex: 1; min-width: 0; }
+		.name { font-weight: bold; font-size: 16px; }
+		.name .tw { font-weight: normal; color: var(--sub); font-size: 13px; margin-left: 6px; }
+		.meta { font-size: 13px; color: var(--sub); margin: 3px 0 6px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+		.meta .id { font-family: monospace; }
+		.dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: -1px; margin-right: 3px; }
+		.ws-icon { height: 16px; vertical-align: -3px; border: none; }
+		.sum { background: var(--sum); border-radius: 6px; padding: 6px 9px; line-height: 1.6; }
+		.orig { display: none; margin-top: 6px; font-size: 13px; color: var(--sub); line-height: 1.5; border-top: 1px dashed var(--line); padding-top: 5px; }
+		body.show-orig .orig { display: block; }
+		.feat { font-size: 12px; color: var(--sub); }
+		#zoom { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 20; cursor: zoom-out; }
+		#zoom img { max-width: 92vw; max-height: 92vh; border-radius: 10px; }
+		#msg { padding: 30px; text-align: center; color: var(--sub); }
+		.legend { font-size: 12px; color: var(--sub); margin-top: 6px; }
+		@media (max-width: 600px) { .row .pic { flex-basis: 70px; } .row .pic img { width: 70px; } .row.cx .pic, .row.cx .pic img { flex-basis: 98px; width: 98px; } }
+	</style>
+</head>
+<body>
+<header>
+	<h1>Weiß Schwarz 卡片效果簡述 <small>人工整理的中文重點摘要｜<a href="index.html">回組牌器</a></small></h1>
+	<div class="ctl">
+		<span><label>タイトル</label> <select id="selSeries"></select></span>
+		<span><label>作品</label> <select id="selWork"><option value="">全部</option></select></span>
+		<span><label>種類</label>
+			<select id="selKind"><option value="">全部</option><option value="キャラ">角色</option><option value="イベント">事件</option><option value="クライマックス">名場面</option></select></span>
+		<span><label>色</label>
+			<select id="selColor"><option value="">全部</option><option value="黄">黃</option><option value="緑">綠</option><option value="赤">紅</option><option value="青">藍</option></select></span>
+		<span><label>Lv</label>
+			<select id="selLevel"><option value="">全部</option><option>0</option><option>1</option><option>2</option><option>3</option></select></span>
+		<span><input type="text" id="kw" placeholder="搜尋卡名／卡號／效果"></span>
+		<label><input type="checkbox" id="chkOrig"> 顯示原文</label>
+		<button id="darkBtn" type="button">🌙 Dark</button>
+		<span id="count"></span>
+	</div>
+	<div class="legend">P = 攻擊力、S = 靈魂；(n) = 支付 n 張能量；CXC = 名場面連攜；治療 1 = 傷害區頂 1 張送去休息室。</div>
+</header>
+<main id="list"><div id="msg">載入中…</div></main>
+<div id="zoom"><img alt=""></div>
+
+<script>
+// 有簡述的タイトル檔 (data/sum_<file>.js)；其他タイトル陸續分批加入
+var SUMMARY_READY = ["t_GA01"];
+
+var cardData = [];
+var SUMMARY = {};		// 卡號 → 簡述
+var loaded = {};
+
+function wsAddData(file, rows) { rows.forEach(function(r) { cardData.push(r); }); }
+function wsAddSummary(file, prefix, obj) {
+	for(var k in obj) SUMMARY[k.indexOf("/") >= 0 ? k : prefix + k] = obj[k];
+}
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function icon(name) { return "<img class='ws-icon' src='" + ICON_BASE + esc(name) + ".gif' alt='" + esc(TRIGGER_NAME[name] || name) + "' title='" + esc(TRIGGER_NAME[name] || name) + "'>"; }
+function textHtml(t) { return esc(t).replace(/&lt;br&gt;/g, "<br>").replace(/\[\[(\w+)\.gif\]\]/g, function(m, n) { return icon(n); }); }
+var KIND_TW = { "キャラ": "角色", "イベント": "事件", "クライマックス": "名場面" };
+var COLOR_TW = { "黄": "黃", "緑": "綠", "赤": "紅", "青": "藍" };
+
+function loadScript(src) {
+	return new Promise(function(ok, ng) {
+		var s = document.createElement("script");
+		s.src = src + "?v=" + Date.now();
+		s.onload = ok; s.onerror = function() { ng(src); };
+		document.head.appendChild(s);
+	});
+}
+
+function loadSeries(file) {
+	if(loaded[file]) return Promise.resolve();
+	return loadScript("data/" + file + ".js").then(function() { return loadScript("data/sum_" + file + ".js"); })
+		.then(function() { loaded[file] = true; });
+}
+
+function currentSeries() { return SERIES[+document.getElementById("selSeries").value]; }
+
+function buildSeriesMenu() {
+	var sel = document.getElementById("selSeries"), html = "";
+	SERIES.forEach(function(s, i) {
+		var ready = SUMMARY_READY.indexOf(s[2]) >= 0;
+		html += "<option value='" + i + "'" + (ready ? "" : " disabled") + ">" + esc(s[0]) + (ready ? "" : "（準備中）") + "</option>";
+	});
+	sel.innerHTML = html;
+	var first = SERIES.findIndex(function(s) { return SUMMARY_READY.indexOf(s[2]) >= 0; });
+	sel.value = first;
+}
+
+function buildWorkMenu() {
+	var s = currentSeries(), sel = document.getElementById("selWork"), html = "<option value=''>全部</option>";
+	s[1].forEach(function(code) {
+		if(!cardData.some(function(c) { return c[TITLE] == code; })) return;
+		html += "<option value='" + code + "'>[" + code + "] " + esc(TITLE_NAMES[code] || code) + "</option>";
+	});
+	sel.innerHTML = html;
+}
+
+function render() {
+	var s = currentSeries();
+	var work = document.getElementById("selWork").value, kind = document.getElementById("selKind").value;
+	var color = document.getElementById("selColor").value, lv = document.getElementById("selLevel").value;
+	var kw = document.getElementById("kw").value.trim().toLowerCase();
+	var groups = {}, order = [], n = 0;
+	cardData.forEach(function(c) {
+		if(s[1].indexOf(c[TITLE]) < 0) return;
+		if(work && c[TITLE] != work) return;
+		if(kind && c[KIND] != kind) return;
+		if(color && c[COLOR] != color) return;
+		if(lv && (c[KIND] == "クライマックス" || c[LEVEL] != lv)) return;
+		var sum = SUMMARY[c[ID]] || "";
+		if(kw) {
+			var hay = (c[ID] + " " + c[NAME] + " " + (c[TW_NAME] || "") + " " + sum + " " + c[TEXT] + " " + (c[TW_TEXT] || "") + " " + c[FEATURE]).toLowerCase();
+			if(hay.indexOf(kw) < 0) return;
+		}
+		if(!groups[c[TITLE]]) { groups[c[TITLE]] = []; order.push(c[TITLE]); }
+		groups[c[TITLE]].push(c); n++;
+	});
+	order.sort(function(a, b) { return s[1].indexOf(a) - s[1].indexOf(b); });
+	var html = "";
+	order.forEach(function(code) {
+		var list = groups[code];
+		list.sort(function(a, b) {
+			var ka = KIND_ORDER.indexOf(a[KIND]), kb = KIND_ORDER.indexOf(b[KIND]);
+			if(ka != kb) return ka - kb;
+			if(a[LEVEL] != b[LEVEL]) return (+a[LEVEL] || 0) - (+b[LEVEL] || 0);
+			return a[ID] < b[ID] ? -1 : 1;
+		});
+		html += "<h2 class='work'><span class='code'>[" + esc(code) + "]</span>" + esc(TITLE_NAMES[code] || code) + "<span class='n'>" + list.length + " 張</span></h2>";
+		list.forEach(function(c) { html += rowHtml(c); });
+	});
+	document.getElementById("list").innerHTML = html || "<div id='msg'>沒有符合條件的卡片</div>";
+	document.getElementById("count").textContent = n + " 張";
+}
+
+function rowHtml(c) {
+	var cx = c[KIND] == "クライマックス";
+	var meta = "<span class='id'>" + esc(c[ID]) + "</span>";
+	meta += "<span><span class='dot' style='background:" + (COLOR_HEX[c[COLOR]] || "#888") + "'></span>" + (COLOR_TW[c[COLOR]] || c[COLOR]) + "・" + KIND_TW[c[KIND]] + "</span>";
+	if(!cx) meta += "<span>Lv" + esc(c[LEVEL]) + " / Cost " + esc(c[COST]) + "</span>";
+	if(c[KIND] == "キャラ") meta += "<span>P" + esc(c[POWER]) + " / S" + esc(c[SOUL]) + "</span>";
+	if(c[TRIGGER]) meta += "<span>觸發 " + c[TRIGGER].split(" ").map(icon).join("") + "</span>";
+	if(c[FEATURE]) meta += "<span class='feat'>" + esc(c[FEATURE]) + "</span>";
+	var sum = SUMMARY[c[ID]];
+	var img = c[SRC] ? "<img loading='lazy' src='" + IMG_BASE + esc(c[SRC]) + "' alt=''>" : "";
+	return "<div class='row" + (cx ? " cx" : "") + "'><div class='pic'>" + img + "</div><div class='body'>" +
+		"<div class='name'>" + esc(c[NAME]) + (c[TW_NAME] ? "<span class='tw'>" + esc(c[TW_NAME]) + "</span>" : "") + "</div>" +
+		"<div class='meta'>" + meta + "</div>" +
+		"<div class='sum'>" + (sum ? esc(sum) : "<span style='color:var(--sub)'>（簡述準備中）</span>") + "</div>" +
+		"<div class='orig'>" + textHtml(c[TEXT] || "") + (c[TW_TEXT] ? "<br><br>" + textHtml(c[TW_TEXT]) : "") + "</div>" +
+		"</div></div>";
+}
+
+function changeSeries() {
+	var s = currentSeries();
+	document.getElementById("list").innerHTML = "<div id='msg'>載入中…</div>";
+	loadSeries(s[2]).then(function() { buildWorkMenu(); render(); })
+		.catch(function(e) { document.getElementById("list").innerHTML = "<div id='msg'>載入失敗：" + esc(e) + "</div>"; });
+}
+
+function setDark(on) {
+	document.body.classList.toggle("dark-mode", on);
+	document.getElementById("darkBtn").textContent = on ? "☀ Light" : "🌙 Dark";
+	try { localStorage.setItem("ws_dark_mode", on ? "1" : "0"); } catch(e) {}
+}
+
+window.addEventListener("DOMContentLoaded", function() {
+	var dark = false;
+	try { dark = localStorage.getItem("ws_dark_mode") == "1"; } catch(e) {}
+	setDark(dark);
+	document.getElementById("darkBtn").onclick = function() { setDark(!document.body.classList.contains("dark-mode")); };
+	buildSeriesMenu();
+	document.getElementById("selSeries").onchange = changeSeries;
+	["selWork", "selKind", "selColor", "selLevel"].forEach(function(id) { document.getElementById(id).onchange = render; });
+	var t; document.getElementById("kw").oninput = function() { clearTimeout(t); t = setTimeout(render, 200); };
+	document.getElementById("chkOrig").onchange = function() { document.body.classList.toggle("show-orig", this.checked); };
+	document.getElementById("list").addEventListener("click", function(e) {
+		if(e.target.tagName == "IMG" && e.target.closest(".pic")) {
+			var z = document.getElementById("zoom"); z.querySelector("img").src = e.target.src; z.style.display = "flex";
+		}
+	});
+	document.getElementById("zoom").onclick = function() { this.style.display = "none"; };
+	document.addEventListener("keydown", function(e) { if(e.key == "Escape") document.getElementById("zoom").style.display = "none"; });
+	changeSeries();
+});
+</script>
+</body>
+</html>
