@@ -16,12 +16,12 @@ Author: ZZZ
 - Deck View／Card List：檢視整副牌組
 - Comment：每張卡可寫備註 (按「更新」儲存)，可匯出／匯入 JSON
 - Language：日本語／繁體中文切換 (介面、篩選選單、卡片資料與效果)
-- 効果まとめ／效果簡述：左上角連結開啟 `summary.html`
+- 效果簡述頁 `summary.html`：目前不在組牌器放連結，需直接輸入網址開啟
 
 ## 安裝成 App (PWA)
 - 用 Chrome／Edge 開啟 GitHub Pages 網址 → 左上角「📲 安裝 App」按鈕，或網址列右側的安裝圖示
 - Android Chrome：選單 →「安裝應用程式／加到主畫面」；iPhone／iPad Safari：分享 →「加入主畫面」
-- 安裝後以獨立視窗開啟；長按／右鍵 App 圖示有「效果簡述」捷徑
+- 安裝後以獨立視窗開啟
 - 離線使用：看過的タイトル資料與卡圖會快取 (`sw.js`)，沒網路時也能組牌；網站檔案每次有網路時都抓最新版
 - 需要 https (GitHub Pages) 或 localhost；直接開本機 `index.html` (file://) 不會啟用
 
